@@ -1,0 +1,404 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextStep by Shiwastra - Job Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-logo">
+                <!-- Logo Image Place -->
+                <img src="image/job logo 2 .jpg" alt="NextStep Logo" class="logo-img">
+                <span class="logo-text">NextStep</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#home" class="nav-link active">Home</a></li>
+                <li class="nav-item"><a href="#jobs" class="nav-link">Jobs</a></li>
+                <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <button class="btn-login" onclick="showLoginModal()">Login</button>
+                <button class="btn-signup" onclick="showSignupModal()">Sign Up</button>
+                <button class="btn-profile" onclick="showUserDashboard()" style="display: none;">
+                    <i class="fas fa-user"></i> Profile
+                </button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Find Your Dream Job Today</h1>
+                <p class="hero-subtitle">Connecting talented professionals with amazing opportunities</p>
+                <div class="search-box">
+                    <input type="text" id="jobSearch" placeholder="Search for jobs, companies, or keywords..." class="search-input">
+                    <button class="search-btn" onclick="searchJobs()">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Jobs Section -->
+    <section class="featured-jobs">
+        <div class="container">
+            <h2 class="section-title">Featured Job Listings</h2>
+            <div class="jobs-grid" id="featuredJobs">
+                <!-- Featured jobs will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Listings Page -->
+    <section id="jobs" class="jobs-section">
+        <div class="container">
+            <h2 class="section-title">All Job Openings</h2>
+            <div class="filters-container">
+                <select class="filter-select" id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="technology">Technology</option>
+                    <option value="marketing">Marketing</option>
+                    <option value="design">Design</option>
+                    <option value="finance">Finance</option>
+                </select>
+                <select class="filter-select" id="locationFilter">
+                    <option value="all">All Locations</option>
+                    <option value="remote">Remote</option>
+                    <option value="onsite">On-site</option>
+                    <option value="hybrid">Hybrid</option>
+                </select>
+            </div>
+            <div class="jobs-list" id="jobsList">
+                <!-- Jobs will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Detail Modal -->
+    <div id="jobDetailModal" class="modal">
+        <div class="modal-content job-detail-content">
+            <span class="close" onclick="closeJobDetail()">&times;</span>
+            <div id="jobDetailBody">
+                <!-- Job details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLoginModal()">&times;</span>
+            <h2>Login to Your Account</h2>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Login as:</label>
+                    <select id="userType">
+                        <option value="candidate">Candidate</option>
+                        <option value="employer">Employer</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSignupModal()">&times;</span>
+            <h2>Create Your Account</h2>
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Account Type:</label>
+                    <select id="signupUserType">
+                        <option value="candidate">Candidate</option>
+                        <option value="employer">Employer</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Candidate Dashboard -->
+    <div id="candidateDashboard" class="dashboard" style="display: none;">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2>Candidate Dashboard</h2>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+            <div class="dashboard-content">
+                <div class="dashboard-sidebar">
+                    <ul class="dashboard-menu">
+                        <li class="dashboard-menu-item active" onclick="showDashboardSection('profile')">
+                            <i class="fas fa-user"></i> My Profile
+                        </li>
+                        <li class="dashboard-menu-item" onclick="showDashboardSection('applications')">
+                            <i class="fas fa-briefcase"></i> My Applications
+                        </li>
+                        <li class="dashboard-menu-item" onclick="showDashboardSection('saved')">
+                            <i class="fas fa-heart"></i> Saved Jobs
+                        </li>
+                    </ul>
+                </div>
+                <div class="dashboard-main">
+                    <div id="profileSection" class="dashboard-section">
+                        <h3>Profile Management</h3>
+                        <form id="profileForm" onsubmit="updateProfile(event)">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="profileName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="profileEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" id="profilePhone">
+                            </div>
+                            <div class="form-group">
+                                <label>Skills</label>
+                                <input type="text" id="profileSkills" placeholder="e.g., JavaScript, React, Node.js">
+                            </div>
+                            <div class="form-group">
+                                <label>Resume</label>
+                                <input type="file" id="profileResume" accept=".pdf,.doc,.docx">
+                            </div>
+                            <button type="submit" class="btn-submit">Update Profile</button>
+                        </form>
+                    </div>
+                    <div id="applicationsSection" class="dashboard-section" style="display: none;">
+                        <h3>My Applications</h3>
+                        <div id="applicationsList" class="applications-list">
+                            <!-- Applications will be loaded here -->
+                        </div>
+                    </div>
+                    <div id="savedSection" class="dashboard-section" style="display: none;">
+                        <h3>Saved Jobs</h3>
+                        <div id="savedJobsList" class="saved-jobs-list">
+                            <!-- Saved jobs will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employer Dashboard -->
+    <div id="employerDashboard" class="dashboard" style="display: none;">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2>Employer Dashboard</h2>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+            <div class="dashboard-content">
+                <div class="dashboard-sidebar">
+                    <ul class="dashboard-menu">
+                        <li class="dashboard-menu-item active" onclick="showEmployerSection('account')">
+                            <i class="fas fa-building"></i> Account
+                        </li>
+                        <li class="dashboard-menu-item" onclick="showEmployerSection('postjob')">
+                            <i class="fas fa-plus"></i> Post Job
+                        </li>
+                        <li class="dashboard-menu-item" onclick="showEmployerSection('myjobs')">
+                            <i class="fas fa-list"></i> My Jobs
+                        </li>
+                        <li class="dashboard-menu-item" onclick="showEmployerSection('applicants')">
+                            <i class="fas fa-users"></i> Applicants
+                        </li>
+                    </ul>
+                </div>
+                <div class="dashboard-main">
+                    <div id="accountSection" class="dashboard-section">
+                        <h3>Account Management</h3>
+                        <form id="employerAccountForm" onsubmit="updateEmployerAccount(event)">
+                            <div class="form-group">
+                                <label>Company Name</label>
+                                <input type="text" id="companyName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Email</label>
+                                <input type="email" id="companyEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Company Website</label>
+                                <input type="url" id="companyWebsite">
+                            </div>
+                            <div class="form-group">
+                                <label>About Company</label>
+                                <textarea id="companyAbout" rows="4"></textarea>
+                            </div>
+                            <button type="submit" class="btn-submit">Update Account</button>
+                        </form>
+                    </div>
+                    <div id="postjobSection" class="dashboard-section" style="display: none;">
+                        <h3>Post a New Job</h3>
+                        <form id="postJobForm" onsubmit="postJob(event)">
+                            <div class="form-group">
+                                <label>Job Title</label>
+                                <input type="text" id="jobTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select id="jobCategory" required>
+                                    <option value="technology">Technology</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="design">Design</option>
+                                    <option value="finance">Finance</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Location Type</label>
+                                <select id="jobLocation" required>
+                                    <option value="remote">Remote</option>
+                                    <option value="onsite">On-site</option>
+                                    <option value="hybrid">Hybrid</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Salary Range</label>
+                                <input type="text" id="jobSalary" placeholder="e.g., $50,000 - $70,000">
+                            </div>
+                            <div class="form-group">
+                                <label>Job Description</label>
+                                <textarea id="jobDescription" rows="6" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Requirements</label>
+                                <textarea id="jobRequirements" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn-submit">Post Job</button>
+                        </form>
+                    </div>
+                    <div id="myjobsSection" class="dashboard-section" style="display: none;">
+                        <h3>My Posted Jobs</h3>
+                        <div id="myJobsList" class="my-jobs-list">
+                            <!-- Posted jobs will be loaded here -->
+                        </div>
+                    </div>
+                    <div id="applicantsSection" class="dashboard-section" style="display: none;">
+                        <h3>Job Applicants</h3>
+                        <div id="applicantsList" class="applicants-list">
+                            <!-- Applicants will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Modal -->
+    <div id="applicationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeApplicationModal()">&times;</span>
+            <h2>Apply for Job</h2>
+            <form id="applicationForm" onsubmit="submitApplication(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="applicantName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="applicantEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="applicantPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>Cover Letter</label>
+                    <textarea id="coverLetter" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Upload Resume (PDF, DOC, DOCX)</label>
+                    <input type="file" id="resumeUpload" accept=".pdf,.doc,.docx" required>
+                    <small class="file-info">Maximum file size: 5MB</small>
+                </div>
+                <input type="hidden" id="applicationJobId">
+                <button type="submit" class="btn-submit">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>NextStep</h3>
+                    <p>Your next career move starts here</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#jobs">Jobs</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <p><i class="fas fa-envelope"></i> info@nextstep.com</p>
+                    <p><i class="fas fa-phone"></i> +91 67844328**</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 NextStep by Shiwastra. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+```
